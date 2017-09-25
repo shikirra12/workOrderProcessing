@@ -7,14 +7,9 @@ import java.util.Scanner;
 public class Creator {
     public void createWorkOrders() {
         // read input, create work orders and write as json files
-
         WorkOrder workOrder = new WorkOrder();
 
         Scanner scanner = new Scanner(System.in);
-
-//        System.out.println("Create WorkOrder ID");
-//        String idInput = scanner.nextLine();
-//        workOrder.setId(Integer.parseInt(idInput));
 
         System.out.println("Give description of Workorder");
         String descriptionInput = scanner.nextLine();
@@ -26,11 +21,9 @@ public class Creator {
 
 
         workOrder.setStatus(Status.INITIAL);
+        WorkOrder.newWorkOrderCount++;
+        workOrder.setId(WorkOrder.newWorkOrderCount);
 
-//        for (int i = 0; i < ; i++){
-//            int newId = workOrder.id++;
-//            workOrder.getId();
-//        }
 
         try {
             System.out.println(workOrder);
@@ -38,6 +31,7 @@ public class Creator {
             File newFile = new File(fileName);
             FileWriter fileWriter = new FileWriter(newFile);
             System.out.println(fileName);
+
 
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(workOrder);
@@ -53,7 +47,10 @@ public class Creator {
 
     public static void main(String args[]) {
         Creator creator = new Creator();
-        creator.createWorkOrders();
+//        creator.createWorkOrders();
+
+        while (true){
+            creator.createWorkOrders();
+        }
     }
 }
-

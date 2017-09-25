@@ -3,6 +3,7 @@ public class WorkOrder {
     String description;
     String senderName;
     Status status;
+    static int newWorkOrderCount;
 
     public WorkOrder() {
     }
