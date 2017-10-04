@@ -1,18 +1,23 @@
 public class WorkOrder {
-    int id;
-    String description;
-    String senderName;
-    Status status;
-    static int newWorkOrderCount;
+    private int id;
+    private String description;
+    private String senderName;
+    private Status status;
+    private static int newWorkOrderCount = 0;
 
-    public WorkOrder() {
+    public WorkOrder(String description, String senderName, Status initial) {
+        this.id = getNextId();
     }
 
     public WorkOrder(int id, String description, String senderName, Status status) {
-        this.id = id;
+        this.id = getNextId();
         this.description = description;
         this.senderName = senderName;
         this.status = status;
+    }
+
+    public static int getNextId(){
+        return newWorkOrderCount++;
     }
 
     public int getId() {
@@ -46,4 +51,6 @@ public class WorkOrder {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+
 }

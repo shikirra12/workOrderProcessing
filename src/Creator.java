@@ -4,25 +4,37 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.description;
+
 public class Creator {
     public void createWorkOrders() {
         // read input, create work orders and write as json files
-        WorkOrder workOrder = new WorkOrder();
+        Scanner scanner = new Scanner(System.in);
+        boolean shouldContinue = true;
+        while (shouldContinue){
+            createWorkOrder();
+            System.out.println("Would you like to continue?");
+            System.out.println("0: No");
+            System.out.println("Any other number: Continue");
 
+            int input = scanner.nextInt();
+            shouldContinue = input != 0;
+        }
+    }
+
+    public void createWorkOrder(){
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Give description of Workorder");
-        String descriptionInput = scanner.nextLine();
-        workOrder.setDescription(descriptionInput);
+        String description = scanner.nextLine();
 
         System.out.println("What's your name?");
-        String senderNameInput = scanner.nextLine();
-        workOrder.setSenderName(senderNameInput);
+        String senderName = scanner.nextLine();
 
-
+        WorkOrder workOrder = new WorkOrder(description, senderName, Status.INITIAL);
+        workOrder.setDescription(description);
+        workOrder.setSenderName(senderName);
         workOrder.setStatus(Status.INITIAL);
-        WorkOrder.newWorkOrderCount++;
-        workOrder.setId(WorkOrder.newWorkOrderCount);
 
 
         try {
