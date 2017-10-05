@@ -1,3 +1,5 @@
+package com.demo.example;
+
 public class WorkOrder {
     private int id;
     private String description;
@@ -5,11 +7,11 @@ public class WorkOrder {
     private Status status;
     private static int newWorkOrderCount = 0;
 
-    public WorkOrder(String description, String senderName, Status initial) {
+    public WorkOrder() {
         this.id = getNextId();
     }
 
-    public WorkOrder(int id, String description, String senderName, Status status) {
+    public WorkOrder(String description, String senderName, Status status) {
         this.id = getNextId();
         this.description = description;
         this.senderName = senderName;
@@ -52,5 +54,13 @@ public class WorkOrder {
         this.status = status;
     }
 
-
+    @Override
+    public String toString() {
+        return "com.demo.example.WorkOrder{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", senderName='" + senderName + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

@@ -1,3 +1,5 @@
+package com.demo.example;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
@@ -9,9 +11,7 @@ public class Processor {
     Map<Status, Set<WorkOrder>> allWorkOrders = new HashMap<>();
 
     public Processor (){
-        for(Status status : Status.getAllStatus()){
-            allWorkOrders.put(status, new HashSet<WorkOrder>());
-        }
+
     }
 
     public void processWorkOrders() {
@@ -31,12 +31,15 @@ public class Processor {
     private void moveIt() {
         // move work orders in map from one state to another
 
+        System.out.println("This is the initial state: " + allWorkOrders.toString());
+
         Set<WorkOrder> inProgressOrders = allWorkOrders.get(Status.IN_PROGRESS);
         if (inProgressOrders.size() > 0){
             WorkOrder firstInProgress = inProgressOrders.iterator().next();
             inProgressOrders.remove(firstInProgress);
             firstInProgress.setStatus(Status.DONE);
             allWorkOrders.get(Status.DONE).add(firstInProgress);
+            Creator.writeIt(firstInProgress);
         }
 
         Set<WorkOrder> assignedOrders = allWorkOrders.get(Status.ASSIGNED);
@@ -45,6 +48,7 @@ public class Processor {
             assignedOrders.remove(firstInProgress);
             firstInProgress.setStatus(Status.IN_PROGRESS);
             allWorkOrders.get(Status.IN_PROGRESS).add(firstInProgress);
+            Creator.writeIt(firstInProgress);
         }
 
         Set<WorkOrder> initialOrders = allWorkOrders.get(Status.INITIAL);
@@ -52,33 +56,37 @@ public class Processor {
             WorkOrder firstInProgress = initialOrders.iterator().next();
             initialOrders.remove(firstInProgress);
             firstInProgress.setStatus(Status.ASSIGNED);
-            allWorkOrders.get(Status.ASSIGNED);
+            allWorkOrders.get(Status.ASSIGNED).add(firstInProgress);
+            Creator.writeIt(firstInProgress);
         }
 
-        System.out.println("This is the initial state: " + allWorkOrders);
-        System.out.println("Initial WorkOrders :" + initialOrders);
-        System.out.println("Assigned WorkOrders :" + assignedOrders);
-        System.out.println("In Progress WorkOrders: " + inProgressOrders);
-        System.out.println("Completed WorkOrders: " + allWorkOrders);
+        System.out.println("Initial WorkOrders :" + initialOrders.toString());
+        System.out.println("Assigned WorkOrders :" + assignedOrders.toString());
+        System.out.println("In Progress WorkOrders: " + inProgressOrders.toString());
+        System.out.println("Completed WorkOrders: " + allWorkOrders.toString());
 
     }
 
 
     private void readIt() {
         // read the json files into WorkOrders and put in map
-        Set<WorkOrder> putInSystem = new HashSet<>();
+
+        for(Status status : Status.getAllStatus()){
+            allWorkOrders.put(status, new HashSet<>());
+        }
 
         File currentDirectory = new File( ".");
         File files[] = currentDirectory.listFiles();
         for (File f : files) {
             if (f.getName().endsWith(".json")) {
                 // f is a reference to a json file
-                ObjectMapper mapper = new ObjectMapper();
-
                 try {
+                    ObjectMapper mapper = new ObjectMapper();
                     WorkOrder workOrder = mapper.readValue(f, WorkOrder.class);
-                    putInSystem.add(workOrder);
-                    allWorkOrders.put(Status.INITIAL, putInSystem);
+                    Status workOrderStat = workOrder.getStatus();
+                    Set<WorkOrder> appropriateSet = allWorkOrders.get(workOrderStat);
+                    appropriateSet.add(workOrder);
+                    allWorkOrders.put(workOrderStat, appropriateSet);
                     System.out.println("This is the workOrder: " + workOrder);
 
                 } catch (IOException e) {
@@ -88,6 +96,8 @@ public class Processor {
         }
 
     }
+
+
 
     public static void main(String args[]) {
         Processor processor = new Processor();

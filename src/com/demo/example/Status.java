@@ -1,3 +1,5 @@
+package com.demo.example;
+
 public enum Status {
     INITIAL,
     ASSIGNED,

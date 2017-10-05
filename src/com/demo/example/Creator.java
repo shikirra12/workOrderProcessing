@@ -1,10 +1,10 @@
+package com.demo.example;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
-
-import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.description;
 
 public class Creator {
     public void createWorkOrders() {
@@ -36,14 +36,14 @@ public class Creator {
         workOrder.setSenderName(senderName);
         workOrder.setStatus(Status.INITIAL);
 
+        writeIt(workOrder);
+    }
 
+    public static void writeIt (WorkOrder workOrder){
         try {
-            System.out.println(workOrder);
             String fileName = workOrder.getId() + ".json";
             File newFile = new File(fileName);
             FileWriter fileWriter = new FileWriter(newFile);
-            System.out.println(fileName);
-
 
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(workOrder);
@@ -54,7 +54,6 @@ public class Creator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void main(String args[]) {
